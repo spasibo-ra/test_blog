@@ -4,9 +4,10 @@ import { ProfileEntity } from '../user/entity/profile.entity'
 
 
 export const toUserDto = (data: UserEntity): UserDto => {
-  const { id, username, email } = data
+  const { id, username, email, profile } = data
+  const  { bio, avatar } = profile
   let userDto: UserDto = {
-    id, username, email
+    id, username, email, bio, avatar
   }
   return userDto
 }

@@ -7,6 +7,7 @@ import { ProfileEntity } from './entity/profile.entity'
 import { CreateUserDto, UserDto, LoginUserDto } from './dto'
 import { comparePassword } from '../shared/utils'
 import { toUserDto } from '../shared/mapper'
+import { UpdateProfileDto } from './dto/profile.update.dto'
 
 @Injectable()
 export class UserService {
@@ -16,9 +17,9 @@ export class UserService {
     @InjectRepository(ProfileEntity) private profileRepository: Repository<ProfileEntity>
     ) {}
 
-  async findOne(username: string): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ username }, {relations: ['profile']} )
-    return user
+  async findOne(optitons?: any): Promise<UserDto> {
+    const user = await this.userRepository.findOne(optitons, {relations: ['profile']})
+    return toUserDto(user)
   }
 
   async findByLogin ({ username, password }: LoginUserDto): Promise<UserDto> {
@@ -33,7 +34,6 @@ export class UserService {
     return toUserDto(user)
   }
 
-
   async findByPayload ({ username }: any): Promise<UserDto> {
     return await this.userRepository.findOne({ where: { username } })
   }
@@ -44,11 +44,13 @@ export class UserService {
     if (userInDB) {
       throw new BadRequestException('User already exists')
     }
+
     const profile: ProfileEntity = this.profileRepository.create({
       bio,
       avatar
     })
     await this.profileRepository.save(profile)
+
     const user: UserEntity = this.userRepository.create({
       username,
       email,
@@ -57,15 +59,15 @@ export class UserService {
         profile_id: profile.profile_id
       }
     })
-
     await this.userRepository.save(user)
+
     return toUserDto(user)
   }
 
 
 
-  async update () {
-
+  async update (uId: any, data: UpdateProfileDto) {
+    await this.
   }
 
 }

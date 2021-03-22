@@ -5,6 +5,7 @@ import { JwtPayload } from 'src/auth/interfaces/auth.interface'
 
 import { User } from '../auth/user.decorator'
 import { UserDto } from './dto'
+import { UpdateProfileDto } from './dto/profile.update.dto'
 import { UserService } from './user.service'
 
 @ApiBearerAuth('JWT-auth')
@@ -17,18 +18,27 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard())
   async findCurrentUser(@Req() req: any) {
-    return req.user
+    return this.userService.findOne(req.user.id)
   }
 
-  @Get('/:username')
+  @Put()
   @UseGuards(AuthGuard())
-  async findOne (@Param('username') username: string) {
-    const user = await this.userService.findOne(username)
-    if (!user) {
-      throw new NotFoundException(`Can't found user: ${username}`)
-    }
-    return { user }
+  async update (
+    @Req() req: any,
+    @Body(new ValidationPipe({ transform: true, whitelist: true })) data: UpdateProfileDto
+    ) {
+      return await this.userService.update(req.user.id, data)
   }
+
+  // @Get('/:username')
+  // @UseGuards(AuthGuard())
+  // async findOne (@Param('username') username: string) {
+  //   const user = await this.userService.findOne(username)
+  //   if (!user) {
+  //     throw new NotFoundException(`Can't found user: ${username}`)
+  //   }
+  //   return { user }
+  // }
 
 
 
