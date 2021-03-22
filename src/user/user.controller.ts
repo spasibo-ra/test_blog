@@ -1,14 +1,22 @@
-import { Body, Controller, Get, Param, Put, Req, UseGuards, ValidationPipe, NotFoundException } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Req,
+  UseGuards,
+  ValidationPipe,
+  NotFoundException
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { ApiBearerAuth, ApiParam,  } from '@nestjs/swagger'
-import { JwtPayload } from 'src/auth/interfaces/auth.interface'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
-import { User } from '../auth/user.decorator'
-import { UserDto } from './dto'
-import { UpdateProfileDto } from './dto/profile.update.dto'
+import { UpdateProfileDto } from '../profile/dto/profile.update.dto'
 import { UserService } from './user.service'
 
 @ApiBearerAuth('JWT-auth')
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(
@@ -21,14 +29,6 @@ export class UserController {
     return this.userService.findOne(req.user.id)
   }
 
-  @Put()
-  @UseGuards(AuthGuard())
-  async update (
-    @Req() req: any,
-    @Body(new ValidationPipe({ transform: true, whitelist: true })) data: UpdateProfileDto
-    ) {
-      return await this.userService.update(req.user.id, data)
-  }
 
   // @Get('/:username')
   // @UseGuards(AuthGuard())

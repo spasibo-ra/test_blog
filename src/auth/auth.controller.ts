@@ -1,9 +1,11 @@
 import { Body, Controller, Post,  BadRequestException, UseGuards, Get, Res, Request } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 
 import { AuthService } from './auth.service'
 import { LoginStatus, RegistrationStatus } from './interfaces/auth.interface'
 import { LoginUserDto, CreateUserDto } from '../user/dto'
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 

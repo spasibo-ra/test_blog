@@ -3,11 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { UserEntity } from './entity/user.entity'
-import { ProfileEntity } from './entity/profile.entity'
+import { ProfileEntity } from '../profile/entity/profile.entity'
+
 import { CreateUserDto, UserDto, LoginUserDto } from './dto'
+import { UpdateProfileDto } from '../profile/dto/profile.update.dto'
+
 import { comparePassword } from '../shared/utils'
-import { toUserDto } from '../shared/mapper'
-import { UpdateProfileDto } from './dto/profile.update.dto'
+import { toProfileDto, toUserDto } from '../shared/mapper'
+import { ProfileDto } from 'src/profile/dto/profile.dto'
+
 
 @Injectable()
 export class UserService {
@@ -18,7 +22,7 @@ export class UserService {
     ) {}
 
   async findOne(optitons?: any): Promise<UserDto> {
-    const user = await this.userRepository.findOne(optitons, {relations: ['profile']})
+    const user = await this.userRepository.findOne(optitons)
     return toUserDto(user)
   }
 
@@ -36,6 +40,11 @@ export class UserService {
 
   async findByPayload ({ username }: any): Promise<UserDto> {
     return await this.userRepository.findOne({ where: { username } })
+  }
+
+  async findProfile(id: string): Promise<ProfileDto> {
+    const [{ profile }] = await this.userRepository.find({ where: { id }, relations:['profile'] })
+    return toProfileDto(profile)
   }
 
   async create (createUserDto: CreateUserDto): Promise<UserDto> {
@@ -62,12 +71,6 @@ export class UserService {
     await this.userRepository.save(user)
 
     return toUserDto(user)
-  }
-
-
-
-  async update (uId: any, data: UpdateProfileDto) {
-    await this.
   }
 
 }
