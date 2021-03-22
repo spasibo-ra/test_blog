@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsNotEmpty } from 'class-validator'
-import { ProfileDto } from './profile.dto'
 
-export class UserDto extends ProfileDto {
+export class UserDto  {
   @IsNotEmpty()
   id: string
 
@@ -15,8 +14,5 @@ export class UserDto extends ProfileDto {
 
   createOn?: Date
 
-  bio?: string
-
-  avatar?: string
 }
 

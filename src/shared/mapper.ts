@@ -1,13 +1,13 @@
-import { ProfileDto, UserDto } from '../user/dto'
+import { UserDto } from '../user/dto'
+import { ProfileDto} from '../profile/dto/profile.dto'
 import { UserEntity } from '../user/entity/user.entity'
-import { ProfileEntity } from '../user/entity/profile.entity'
+import { ProfileEntity } from '../profile/entity/profile.entity'
 
 
 export const toUserDto = (data: UserEntity): UserDto => {
-  const { id, username, email, profile } = data
-  const  { bio, avatar } = profile
+  const { id, username, email } = data
   let userDto: UserDto = {
-    id, username, email, bio, avatar
+    id, username, email,
   }
   return userDto
 }

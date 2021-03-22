@@ -6,11 +6,12 @@ import {
   BeforeInsert,
   BaseEntity,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  UpdateDateColumn
 } from 'typeorm'
 import * as bcrypt from 'bcryptjs'
 
-import { ProfileEntity } from './profile.entity'
+import { ProfileEntity } from 'src/profile/entity/profile.entity'
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -19,8 +20,8 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false }) password: string
   @Column({ type: 'varchar', nullable: false }) email: string
   @CreateDateColumn() createdOn?: Date
-  @CreateDateColumn() updatedOn?: Date
-  @OneToOne(() => ProfileEntity, profile => profile.user)
+  @UpdateDateColumn() updatedOn?: Date
+  @OneToOne(type => ProfileEntity, profile => profile.user)
   @JoinColumn() profile: ProfileEntity
 
 

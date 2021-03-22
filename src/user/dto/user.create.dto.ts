@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsEmail, IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
-import { ProfileDto } from './profile.dto'
+import { ProfileDto } from '../../profile/dto/profile.dto'
 
 
 export class CreateUserDto extends ProfileDto {
