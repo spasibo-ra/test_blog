@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { ProfileDto } from './profile.dto'
 
 
-export class UserCreateDto extends ProfileDto {
+export class CreateUserDto extends ProfileDto {
   @ApiProperty({
     example: 'Spabibo'
   })

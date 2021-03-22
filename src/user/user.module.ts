@@ -6,7 +6,6 @@ import { ProfileEntity } from './entity/profile.entity'
 import { UserController } from './user.controller'
 import { UserService } from './user.service'
 
-import { ProfileController } from './profile.controller'
 import { AuthModule } from 'src/auth/auth.module'
 
 

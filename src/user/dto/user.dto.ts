@@ -5,7 +5,7 @@ export class UserDto {
   @IsNotEmpty()
   id: string
 
-  @ApiProperty({ type: 'path', name: 'username' })
+  @ApiProperty({ type: 'path', example: 'Spasibo'})
   @IsNotEmpty()
   username: string
 
