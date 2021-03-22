@@ -12,7 +12,5 @@ export class UserDto  {
   @IsEmail()
   email: string
 
-  createOn?: Date
-
 }
 

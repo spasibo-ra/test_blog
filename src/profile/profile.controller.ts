@@ -32,7 +32,7 @@ export class ProfileController {
       @User() { id }: UserEntity,
       @Body() data: UpdateProfileDto
       ) {
-      const { profile_id } = await this.userService.findProfile(id)
+      const profile_id = await this.userService.findProfileId(id)
       return await this.profileService.update(profile_id, data)
     }
 }

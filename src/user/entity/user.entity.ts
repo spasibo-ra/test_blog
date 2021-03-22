@@ -19,8 +19,6 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false, unique: true }) username: string
   @Column({ type: 'varchar', nullable: false }) password: string
   @Column({ type: 'varchar', nullable: false }) email: string
-  @CreateDateColumn() createdOn?: Date
-  @UpdateDateColumn() updatedOn?: Date
   @OneToOne(type => ProfileEntity, profile => profile.user)
   @JoinColumn() profile: ProfileEntity
 

@@ -5,17 +5,20 @@ import { ProfileEntity } from '../profile/entity/profile.entity'
 
 
 export const toUserDto = (data: UserEntity): UserDto => {
-  const { id, username, email } = data
-  let userDto: UserDto = {
-    id, username, email,
-  }
+  let userDto: UserDto = data
   return userDto
 }
 
 export const toProfileDto =  (data: ProfileEntity) => {
-  const { profile_id, bio, avatar } = data
-  let profileDto: ProfileDto = {
-    profile_id, bio, avatar
-  }
+  delete data.profile_id
+  let profileDto: ProfileDto = data
   return profileDto
 }
+
+export const toUpdateProfileDto =  (data: ProfileEntity) => {
+  const { profile_id, bio, avatar } = data
+  let profileDto: ProfileDto = data
+  return profileDto
+}
+
+

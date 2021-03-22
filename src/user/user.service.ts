@@ -42,22 +42,19 @@ export class UserService {
     return await this.userRepository.findOne({ where: { username } })
   }
 
-  async findProfile(id: string): Promise<ProfileDto> {
+  async findProfileId(id: string): Promise<number> {
     const [{ profile }] = await this.userRepository.find({ where: { id }, relations:['profile'] })
-    return toProfileDto(profile)
+    return profile.profile_id
   }
 
   async create (createUserDto: CreateUserDto): Promise<UserDto> {
-    const { username, email, password, bio, avatar } = createUserDto
+    const { username, email, password } = createUserDto
     const userInDB = await this.userRepository.findOne( { where: { username } })
     if (userInDB) {
       throw new BadRequestException('User already exists')
     }
 
-    const profile: ProfileEntity = this.profileRepository.create({
-      bio,
-      avatar
-    })
+    const profile: ProfileEntity = new ProfileEntity()
     await this.profileRepository.save(profile)
 
     const user: UserEntity = this.userRepository.create({
