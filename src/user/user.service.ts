@@ -4,13 +4,12 @@ import { Repository } from 'typeorm'
 
 import { UserEntity } from './entity/user.entity'
 import { ProfileEntity } from '../profile/entity/profile.entity'
+import { AccountEntity } from '../account/entity/account.entity'
 
 import { CreateUserDto, UserDto, LoginUserDto } from './dto'
-import { UpdateProfileDto } from '../profile/dto/profile.update.dto'
 
 import { comparePassword } from '../shared/utils'
-import { toProfileDto, toUserDto } from '../shared/mapper'
-import { ProfileDto } from 'src/profile/dto/profile.dto'
+import { toUserDto } from '../shared/mapper'
 
 
 @Injectable()
@@ -18,7 +17,8 @@ export class UserService {
 
   constructor (
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
-    @InjectRepository(ProfileEntity) private profileRepository: Repository<ProfileEntity>
+    @InjectRepository(ProfileEntity) private profileRepository: Repository<ProfileEntity>,
+    @InjectRepository(AccountEntity) private accountRepository: Repository<AccountEntity>
     ) {}
 
   async findOne(optitons?: any): Promise<UserDto> {
@@ -53,7 +53,8 @@ export class UserService {
     if (userInDB) {
       throw new BadRequestException('User already exists')
     }
-
+    const account: AccountEntity = new AccountEntity()
+    await this.accountRepository.save(account)
     const profile: ProfileEntity = new ProfileEntity()
     await this.profileRepository.save(profile)
 
@@ -63,6 +64,9 @@ export class UserService {
       password,
       profile: {
         profile_id: profile.profile_id
+      },
+      account: {
+        account_id: account.account_id
       }
     })
     await this.userRepository.save(user)

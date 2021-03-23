@@ -9,11 +9,12 @@ import { ProfileService } from './profile.service'
 import { ProfileEntity } from './entity/profile.entity'
 import { UserService } from 'src/user/user.service'
 import { UserEntity } from 'src/user/entity/user.entity'
+import { AccountEntity } from 'src/account/entity/account.entity'
 
 @Module({
   imports: [
     forwardRef(() => AuthModule),
-    TypeOrmModule.forFeature([ProfileEntity, UserEntity])
+    TypeOrmModule.forFeature([ProfileEntity, UserEntity, AccountEntity])
   ],
   controllers: [ProfileController],
   providers: [ProfileService, UserService]

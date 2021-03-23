@@ -9,10 +9,6 @@ import { UserEntity } from 'src/user/entity/user.entity'
 import { UserService } from 'src/user/user.service'
 
 @Module({
-  imports: [
-    forwardRef(() => AuthModule),
-    TypeOrmModule.forFeature([UserEntity])
-  ],
   controllers: [PostsController],
   providers: [PostsService, UserService]
 })
