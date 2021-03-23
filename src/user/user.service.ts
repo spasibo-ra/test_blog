@@ -1,60 +1,61 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { UserEntity } from './entity/user.entity'
-import { ProfileEntity } from './entity/profile.entity'
-import { UserCreateDto, UserDto, LoginUserDto, ProfileDto } from './dto'
+import { ProfileEntity } from '../profile/entity/profile.entity'
+import { AccountEntity } from '../account/entity/account.entity'
+
+import { CreateUserDto, UserDto, LoginUserDto } from './dto'
+
 import { comparePassword } from '../shared/utils'
-import { toProfileDto, toUserDto } from '../shared/mapper'
+import { toUserDto } from '../shared/mapper'
+
 
 @Injectable()
 export class UserService {
 
   constructor (
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
-    @InjectRepository(ProfileEntity) private profileRepository: Repository<ProfileEntity>
+    @InjectRepository(ProfileEntity) private profileRepository: Repository<ProfileEntity>,
+    @InjectRepository(AccountEntity) private accountRepository: Repository<AccountEntity>
     ) {}
 
-  async findOne(options?: object): Promise<UserDto> {
-    const user = await this.userRepository.findOne(options)
+  async findOne(optitons?: any): Promise<UserDto> {
+    const user = await this.userRepository.findOne(optitons)
     return toUserDto(user)
   }
 
   async findByLogin ({ username, password }: LoginUserDto): Promise<UserDto> {
-
     const user = await this.userRepository.findOne({ where: { username } })
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED)
+      throw new NotFoundException('User not found')
     }
     const areEqual = await comparePassword(user.password, password)
     if (!areEqual) {
-      throw new HttpException('Invalid Credential', HttpStatus.UNAUTHORIZED)
+      throw new UnauthorizedException('Invalid Credential')
     }
     return toUserDto(user)
-
   }
 
   async findByPayload ({ username }: any): Promise<UserDto> {
     return await this.userRepository.findOne({ where: { username } })
   }
 
-  async findByUsername ({ username }: UserDto): Promise<UserDto>{
-    const user = await this.userRepository.findOne({ username })
-    return toUserDto(user)
+  async findProfileId(id: string): Promise<number> {
+    const [{ profile }] = await this.userRepository.find({ where: { id }, relations:['profile'] })
+    return profile.profile_id
   }
 
-  async create (userDto: UserCreateDto): Promise<UserDto> {
-    const { username, email, password, profile_id, bio, avatar } = userDto
+  async create (createUserDto: CreateUserDto): Promise<UserDto> {
+    const { username, email, password } = createUserDto
     const userInDB = await this.userRepository.findOne( { where: { username } })
     if (userInDB) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST)
+      throw new BadRequestException('User already exists')
     }
-
-    const profile: ProfileEntity = this.profileRepository.create({
-      bio,
-      avatar
-    })
+    const account: AccountEntity = new AccountEntity()
+    await this.accountRepository.save(account)
+    const profile: ProfileEntity = new ProfileEntity()
     await this.profileRepository.save(profile)
 
     const user: UserEntity = this.userRepository.create({
@@ -63,15 +64,14 @@ export class UserService {
       password,
       profile: {
         profile_id: profile.profile_id
+      },
+      account: {
+        account_id: account.account_id
       }
     })
-
     await this.userRepository.save(user)
+
     return toUserDto(user)
-  }
-
-  async update () {
-
   }
 
 }

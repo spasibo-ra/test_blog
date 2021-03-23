@@ -1,13 +1,22 @@
-import { Body, Controller, Get, Param, Put, Req, UseGuards, ValidationPipe } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Req,
+  UseGuards,
+  ValidationPipe,
+  NotFoundException
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { ApiBearerAuth, ApiParam,  } from '@nestjs/swagger'
-import { JwtPayload } from 'src/auth/interfaces/auth.interface'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
-import { User } from '../auth/user.decorator'
-import { UserDto } from './dto'
+import { UpdateProfileDto } from '../profile/dto/profile.update.dto'
 import { UserService } from './user.service'
 
 @ApiBearerAuth('JWT-auth')
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(
@@ -17,15 +26,19 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard())
   async findCurrentUser(@Req() req: any) {
-    return req.user
+    return this.userService.findOne(req.user.id)
   }
 
-  @Get(':username')
-  @UseGuards(AuthGuard())
-  async findByUsername(@Param('username') username: UserDto) {
-    const user = await this.userService.findOne(username)
-    return {...user}
-  }
+
+  // @Get('/:username')
+  // @UseGuards(AuthGuard())
+  // async findOne (@Param('username') username: string) {
+  //   const user = await this.userService.findOne(username)
+  //   if (!user) {
+  //     throw new NotFoundException(`Can't found user: ${username}`)
+  //   }
+  //   return { user }
+  // }
 
 
 

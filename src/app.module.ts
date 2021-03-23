@@ -9,6 +9,10 @@ import { AppService } from './app.service'
 
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
+import { ProfileModule } from './profile/profile.module'
+import { PostsModule } from './posts/posts.module'
+import { AccountModule } from './account/account.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -18,6 +22,9 @@ import { UserModule } from './user/user.module'
     }),
     AuthModule,
     UserModule,
+    ProfileModule,
+    AccountModule,
+    TransactionModule
   ],
   controllers: [AppController],
   providers: [AppService],

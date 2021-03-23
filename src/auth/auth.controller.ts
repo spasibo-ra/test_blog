@@ -1,9 +1,11 @@
 import { Body, Controller, Post,  BadRequestException, UseGuards, Get, Res, Request } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 
 import { AuthService } from './auth.service'
 import { LoginStatus, RegistrationStatus } from './interfaces/auth.interface'
-import { LoginUserDto, ProfileDto, UserCreateDto } from '../user/dto'
+import { LoginUserDto, CreateUserDto } from '../user/dto'
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 
@@ -12,7 +14,7 @@ export class AuthController {
   ) {}
 
     @Post('register')
-    public async register (@Body() createUserDto: UserCreateDto): Promise<RegistrationStatus> {
+    public async register (@Body() createUserDto: CreateUserDto): Promise<RegistrationStatus> {
       const result: RegistrationStatus = await this.authService.register(createUserDto)
       if (!result.success) {
         throw new BadRequestException(result.message)

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 
 import { JwtPayload, LoginStatus, RegistrationStatus } from './interfaces/auth.interface'
-import { UserDto, LoginUserDto, UserCreateDto, ProfileDto } from '../user/dto'
+import { UserDto, LoginUserDto, CreateUserDto } from '../user/dto'
 import { UserService } from 'src/user/user.service';
 
 
@@ -24,7 +24,7 @@ export class AuthService {
       }
     }
 
-    async register (userDto: UserCreateDto): Promise<RegistrationStatus> {
+    async register (userDto: CreateUserDto): Promise<RegistrationStatus> {
       let status: RegistrationStatus = {
         success: true,
         message: 'User are Registered'
