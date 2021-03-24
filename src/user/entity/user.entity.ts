@@ -18,10 +18,12 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false, unique: true }) username: string
   @Column({ type: 'varchar', nullable: false }) password: string
   @Column({ type: 'varchar', nullable: false }) email: string
+
   @OneToOne(type => ProfileEntity, profile => profile.user)
-  @JoinColumn() profile: ProfileEntity
+  @JoinColumn({ name: 'profile_id'}) profile: ProfileEntity
+
   @OneToOne(type => AccountEntity, account => account.user)
-  @JoinColumn() account: AccountEntity
+  @JoinColumn({ name: 'account_id'}) account: AccountEntity
 
 
 
